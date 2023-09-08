@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rainbow-book
+  labels:
+    app: rainbow-book
+spec:
+  replicas: 3
+  template:
+    metadata:
+      name: rainbow-book
+      labels:
+        app: rainbow-book
+    spec:
+      containers:
+        - name: rainbow-book
+          image: levey/rainbow_book:v0.0.2
+          ports:
+            - containerPort: 8080
+  selector:
+    matchLabels:
+      app: rainbow-book
