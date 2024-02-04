@@ -1,7 +1,6 @@
 package main
 
 import (
-	"net/http"
 	"rainbow_book/internal/repository"
 	"rainbow_book/internal/service"
 	"rainbow_book/internal/web"
@@ -29,11 +28,14 @@ type User struct {
 }
 
 func main() {
-	serve := gin.Default()
-	serve.GET("/hello", func(context *gin.Context) {
-		context.String(http.StatusOK, "hello world")
-	})
-	serve.Run(":8080")
+
+	db := initDB()
+	server := initWebServer()
+
+	u := initUser(db)
+	u.RegisterRoutes(server)
+
+	server.Run(":8080")
 }
 
 func initWebServer() *gin.Engine {
@@ -48,8 +50,8 @@ func initWebServer() *gin.Engine {
 	})
 
 	server.Use(cors.New(cors.Config{
-		//AllowOrigins: []string{"*"},
-		//AllowMethods: []string{"POST", "GET"},
+		AllowOrigins: []string{"*"},
+		AllowMethods: []string{"POST", "GET"},
 		AllowHeaders: []string{"Content-Type", "Authorization"},
 		//ExposeHeaders: []string{"x-jwt-token"},
 		// 是否允许你带 cookie 之类的东西
